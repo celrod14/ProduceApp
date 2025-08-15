@@ -2,7 +2,6 @@ from tkinter import *
 import mysql.connector
 from decimal import *
 from datetime import date
-
 from dbconfig import *
 
 class ProduceApp(Frame):
@@ -33,11 +32,13 @@ class ProduceApp(Frame):
 
         self.conn.close()
 
+        # shipping dictionary
         self.shipping = {
-                        '1 Day' : 20.00,
-                        '2 Days' : 15.00,
-                        '3 Days' : 10.00,
-                        }
+            '1 Day' : 20.00,
+            '2 Days' : 15.00,
+            '3 Days' : 10.00
+        }
+
         self.lblProducts = list(self.products)
         self.lblPrices = list(self.prices)
         self.entQuantity = list(self.products)
@@ -88,16 +89,14 @@ class ProduceApp(Frame):
 
         self.row += 2
 
+        self.btnCalculate = Button(self, text='Calculate', bg='#582C83', command=self.Calculate)
+        self.btnCalculate.grid(row=self.row, column=1, ipadx=3, sticky=NSEW, columnspan=1)
+
         self.lblTotalTitle = Label(self, text=('Total: '), font=('Arial', 10, 'bold'), background=self.background)
         self.lblTotalTitle.grid(row=self.row, column=2, sticky=EW, ipadx=10, padx=10)
 
         self.entTotal = Entry(self, width=10, background='white')
         self.entTotal.grid(row=self.row, column=3, sticky=EW, ipadx=10, padx=10)
-
-        # self.row += 2
-
-        self.btnCalculate = Button(self, text='Calculate', bg='#582C83',command=self.Calculate)
-        self.btnCalculate.grid(row=self.row, column=1, ipadx=3, sticky=NSEW, columnspan=1)
 
         self.row += 2
 
@@ -169,7 +168,6 @@ class ProduceApp(Frame):
         self.lblOrderSubmitted.config(text='', bg=self.background)
 
     def Order(self):
-
         self.connOrder = mysql.connector.connect(
             host=db_host,
             user=db_user,
@@ -183,23 +181,15 @@ class ProduceApp(Frame):
         self.orderCursor.execute(self.sql, self.val)
         self.connOrder.commit()
 
-        # self.ordered = True
-
-
-        # self.lblOrderSubmitted = Label(self, text=('Order ' + str(self.orderCursor.lastrowid) + ' submitted 🛒🛒🛒'), font=('Arial', 10, 'bold'), background='white', fg='#A4D65E')
-        # self.lblOrderSubmitted.grid(row=self.row - 2, column=4, sticky=EW, ipadx=10, padx=10)
-
         self.lblOrderSubmitted.config(text=('Order ' + str(self.orderCursor.lastrowid) + ' submitted 🛒🛒🛒'), font=('Arial', 10, 'bold'), background='white', fg='#A4D65E')
 
         self.connOrder.close()
-
-
 
 w = Tk()
 w.title("Produce App")
 w.geometry('380x380')
 w.config(background='#D3D3D3') # light gray
-w.iconbitmap('favicon.ico')
+
 '''************'''
 # Configure rows and columns to expand
 # w.grid_rowconfigure(0, weight=1)
